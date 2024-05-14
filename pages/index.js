@@ -1,11 +1,28 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import Link from "next/link";
 import styles from "@/styles/Home.module.css";
+import { client } from '@/libs/client'
+import { useRouter } from "next/router";
 
-const inter = Inter({ subsets: ["latin"] });
+export default function Home({ blog }) {
+  const router = useRouter();
+  async function deleteItem(event) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const id = formData.get('id');
+    client.delete({
+      endpoint: 'blogs',
+      contentId: id,
+    })
+      .then((res) => {
+        alert("正常に削除されました。")
+        router.push(`/`)
+      })
+      .catch((err) => {
+        alert("削除できませんでした。"+err)
+      })
+  }
 
-export default function Home() {
   return (
     <>
       <Head>
@@ -14,101 +31,43 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.js</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{" "}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
+      <main className={styles.main}>
+        <div id="new-blog">
+          <Link href="/blog/create" className="">
+            <button className="">ブログを作成</button>
+          </Link>
         </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
+        <div id="blog-list">
+          {blog.map((blog) => (
+            <div className={styles.div}>
+              <ul className={styles.ul}>
+                <li className={styles.li} key={blog.id}>
+                  <Link href={`/blog/${blog.id}`}>{blog.title}</Link>
+                  <Link href={`/blog/${blog.id}/update`} className="">
+                    <button className="">編集</button>
+                  </Link>
+                  <form onSubmit={ deleteItem }>
+                    <input type="hidden" name="id" value={blog.id} />
+                    <input type="submit" value="削除" />
+                  </form>
+                </li>
+              </ul>
+            </div>
+          ))}
         </div>
       </main>
     </>
-  );
+  )
+}
+
+export const getStaticProps = async () => {
+  const data = await client.get({
+    endpoint: 'blogs',
+  })
+
+  return {
+    props: {
+      blog: data.contents,
+    },
+  }
 }
