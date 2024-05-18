@@ -1,4 +1,3 @@
-import "server-only"
 import { createClient } from 'microcms-js-sdk';
 
 export const runtime = 'edge';
