@@ -61,8 +61,6 @@ export default function Home({ blog }) {
 }
 
 export const getStaticProps = async () => {
-  const router = useRouter();
-  router.refresh;
 
   const data = await client.get({
     endpoint: 'blogs',
@@ -72,5 +70,6 @@ export const getStaticProps = async () => {
     props: {
       blog: data.contents,
     },
+    revalidate: 10,
   }
 }
