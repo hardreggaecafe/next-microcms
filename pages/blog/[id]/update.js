@@ -82,7 +82,7 @@ export const getStaticProps = async (context) => {
   return {
     props: {
       blog: data,
+      cache: 'no-store' 
     },
-    revalidate: 1,
   };
 };
