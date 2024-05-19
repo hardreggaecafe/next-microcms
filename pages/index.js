@@ -61,10 +61,11 @@ export default function Home({ blog }) {
 }
 
 export const getStaticProps = async () => {
-  const time = new Date();
+  const router = useRouter();
+  router.refresh;
+
   const data = await client.get({
     endpoint: 'blogs',
-    queries: { 'cacheclearparam': `${time.getMinutes()}` }
   })
 
   return {
