@@ -61,6 +61,7 @@ export default function Home({ blog }) {
 }
 
 export const getStaticProps = async () => {
+  const time = new Date();
   const data = await client.get({
     endpoint: 'blogs',
     queries: { 'cacheclearparam': `${time.getMinutes()}` }
