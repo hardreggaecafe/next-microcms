@@ -64,12 +64,14 @@ export const getStaticProps = async () => {
 
   const data = await client.get({
     endpoint: 'blogs',
+    customRequestInit: {
+      cache: "no-store"
+     },
   })
 
   return {
     props: {
       blog: data.contents,
-      cache: 'no-store' 
     },
   }
 }
