@@ -62,7 +62,7 @@ export default function Home({ blog }) {
 
 export const getStaticProps = async () => {
 
-  const data = await client.get({
+  const data = await client.getList({
     endpoint: 'blogs',
     customRequestInit: {
       cache: "no-store"
