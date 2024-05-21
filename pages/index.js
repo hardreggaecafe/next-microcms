@@ -65,7 +65,7 @@ export const getStaticProps = async () => {
   const data = await client.get({
     endpoint: 'blogs',
     customRequestInit: {
-      cache: "no-store"
+      revalidate: 1
      },
   })
 

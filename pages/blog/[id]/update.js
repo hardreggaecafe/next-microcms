@@ -78,7 +78,7 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async (context) => {
   const id = context.params.id;
   const data = await client.get({ endpoint: "blogs", contentId: id, customRequestInit: {
-    cache: "no-store"
+    revalidate: 1
    }, });
 
   return {
