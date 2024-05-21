@@ -65,7 +65,7 @@ export const getStaticProps = async () => {
   const data = await client.get({
     endpoint: 'blogs',
     customRequestInit: {
-      revalidate: 1
+      next: { revalidate: 1 }
      },
   })
 
