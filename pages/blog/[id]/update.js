@@ -77,13 +77,13 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context) => {
   const id = context.params.id;
-  const data = await client.get({ endpoint: "blogs", contentId: id, customRequestInit: {
-    next: { revalidate: 1 }
-   }, });
+  const data = await client.get({ endpoint: "blogs", contentId: id
+   });
 
   return {
     props: {
       blog: data,
     },
+    revalidate: 1
   };
 };

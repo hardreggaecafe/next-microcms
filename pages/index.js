@@ -64,14 +64,12 @@ export const getStaticProps = async () => {
 
   const data = await client.get({
     endpoint: 'blogs',
-    customRequestInit: {
-      next: { revalidate: 1 }
-     },
   })
 
   return {
     props: {
       blog: data.contents,
     },
+    revalidate: 1
   }
 }
